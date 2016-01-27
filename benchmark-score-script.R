@@ -81,29 +81,27 @@ summary(glm_model)
 #predict takes in a model and then the test data set without the thing being predicted.
 test_relevance <- predict(glm_model,test)
 
-#this data set is the test dataset with 
-test_relevance
-
 test_relevance <- ifelse(test_relevance>3,3,test_relevance)
 test_relevance <- ifelse(test_relevance<1,1,test_relevance)
 
-head(test_relevance)
+#ORDER
+test$test_relevance <- test_relevance
+test <- arrange(test, id)
 
-#this is for C5
+#this is for C9
 for (i in 1:nrow(test)) {
     if (test[i, 10] > 0) {
-        test_relevance[i] <- test_relevance[i] * 1.07
+        test[i, 11] <- test[i, 11] * 1.07
     }
 }
 
-test_relevance <- ifelse(test_relevance>3,3,test_relevance)
+max(test$test_relevance)
+if (max(test$test_relevance) > 3) {
+    test$test_relevance <- ifelse(test$test_relevance>3, 3, test$test_relevance)
+}
 
-summary(test_relevance)
-
-test$test_relevance <- test_relevance
-
-submission_C9 <- data.frame(id=test$id,relevance=test_relevance)
-write_csv(submission_C7,"../output/benchmark_submission_C9.csv")
+submission_C9 <- data.frame(id=test$id,relevance=test$test_relevance)
+write_csv(submission_C9,"../output/benchmark_submission_C9.csv")
 print(Sys.time()-t)
 
 #*****************MINE AGAIN ***************************************
@@ -115,24 +113,21 @@ library(data.table)
        
        test <- data.table(test, key = "test_relevance")
        
-       
        xlist <- c(1, 1.25, 1.33, 1.5, 1.67, 1.75, 2, 2.25, 2.33, 2.5, 2.67, 2.75, 3)        #fit to these numbers
        cleanrefdf <- data.frame(xlist, xlist)
        colnames(cleanrefdf) <- c("cleankey", "clean")
-       
        cleanrefdf <- data.table(cleanrefdf, key = "cleankey")
-       
        finalcleantest <- cleanrefdf[test, roll = "nearest"]
        
-       
-       
-       submission2 <- data.frame(id=finalcleantest$id, relevance=finalcleantest$clean)
-       submission2 <- arrange(submission2, id)
+
+    
+       submission_C10 <- data.frame(id=finalcleantest$id, relevance=finalcleantest$clean)
+       submission_C10 <- arrange(submission_C10, id)
        
        hist(finalcleantest$test_relevance2)
        hist(test$test_relevance2)
 
-write_csv(submission2, "benchmark_submission2.csv")
+write_csv(submission_C10, "../output/benchmark_submission_C10.csv")
 
 
 # ****************** ALL MINE ***************************************
