@@ -1,7 +1,8 @@
 
 
-       #setwd("C:/Users/tjvan/Documents/Kaggle/HomeDepot_early_2016/homedepotgit")
-       setwd("~/Analytics/Kaggle/HomeDepot/homedepotgit")
+       setwd("C:/Users/tjvan/Documents/Kaggle/HomeDepot_early_2016/homedepotgit")
+       #setwd("~/Analytics/Kaggle/HomeDepot/homedepotgit")
+       
        
        
        library(readr)
@@ -36,6 +37,7 @@
            n_title <- 0
            n_desc <- 0
            n_bullets <- 0
+           #count_desc <- 0
            words <- unlist(strsplit(words," "))
            nwords <- length(words)
            for(i in 1:length(words)){
@@ -43,9 +45,12 @@
                n_title <- n_title + grepl(pattern,title,perl=TRUE,ignore.case=TRUE)
                n_desc <- n_desc + grepl(pattern,desc,perl=TRUE,ignore.case=TRUE)
                n_bullets <- n_bullets + grepl(pattern,bullets,perl=TRUE,ignore.case=TRUE)
+               #count_desc <- count_desc + length(gregexpr(pattern, desc, perl=TRUE, ignore.case = TRUE))
            }
            return(c(n_title,nwords,n_desc,n_bullets))
        }
+       
+       #length(gregexpr("a", "a a b c a b a")[[1]])
        
        cat("Get number of words and word matching title in train\n")
        train_words <- as.data.frame(t(mapply(word_match,train$search_term,train$product_title,train$product_description,train$bulletvalues)))
@@ -53,6 +58,7 @@
        train$nwords <- train_words[,2]
        train$nmatch_desc <- train_words[,3]
        train$nmatch_bullets <- train_words[,4]
+       #train$countmatch_desc <- train_words[,5]
        
        train <- arrange(train, id)
        
@@ -68,6 +74,7 @@
        test$nwords <- test_words[,2]
        test$nmatch_desc <- test_words[,3]
        test$nmatch_bullets <- test_words[,4]
+       #test$count_desc <- test_words[,5]
        
        test <- arrange(test, id)
        
@@ -77,7 +84,7 @@
        
        #plot(train$nmatch_bullets, train$relevance)
        
-       rm(train_words,test_words)
+       #rm(train_words,test_words)
        
        
        
