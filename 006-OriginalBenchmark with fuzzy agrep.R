@@ -10,6 +10,7 @@ train <- read_csv('../input/train.csv')
 test <- read_csv('../input/test.csv')
 desc <- read_csv('../input/product_descriptions.csv')
 
+?cor
 
 cat("Merge description with train and test data \n")
 train <- merge(train,desc, by.x = "product_uid", by.y = "product_uid", all.x = TRUE, all.y = FALSE)
