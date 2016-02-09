@@ -1,5 +1,6 @@
 
-
+#007 fuzzy agrep matching with the bullet points as well
+#this is all just bullets now, need to add the fuzzy agrep matching!
 
 setwd("C:/Users/tjvan/Documents/Kaggle/HomeDepot_early_2016/homedepotgit")
 #setwd("~/Analytics/Kaggle/HomeDepot/homedepotgit")
@@ -62,19 +63,19 @@ word_match <- function(words,title,desc,bullets,brand){
         foundInDesc <- gregexpr(pattern, desc, perl=TRUE, ignore.case=TRUE)[[1]][[1]]
         print("printing found in desc")
         print(foundInDesc)
-            if(foundInDesc < 0 | is.na(foundInDesc)) {
-                count_desc <- count_desc + 0 #this is just a placeholder for the else condition
-            } else {
-                count_desc <- count_desc + length(gregexpr(pattern, desc, perl=TRUE, ignore.case = TRUE)[[1]])
-            }
+        if(foundInDesc < 0 | is.na(foundInDesc)) {
+            count_desc <- count_desc + 0 #this is just a placeholder for the else condition
+        } else {
+            count_desc <- count_desc + length(gregexpr(pattern, desc, perl=TRUE, ignore.case = TRUE)[[1]])
+        }
         
         #frequency of word appearing in bullets below description
         foundInBullets <- gregexpr(pattern, bullets, perl=TRUE, ignore.case=TRUE)[[1]][[1]]
-            if(foundInBullets < 0 | is.na(foundInBullets)) {
-                count_bullet <- count_bullet + 0 #this is just a placeholder for the else condition
-            } else {
-                count_bullet <- count_bullet + length(gregexpr(pattern, bullets, perl=TRUE, ignore.case = TRUE)[[1]])
-            }
+        if(foundInBullets < 0 | is.na(foundInBullets)) {
+            count_bullet <- count_bullet + 0 #this is just a placeholder for the else condition
+        } else {
+            count_bullet <- count_bullet + length(gregexpr(pattern, bullets, perl=TRUE, ignore.case = TRUE)[[1]])
+        }
     }
     return(c(n_title,nwords,n_desc,n_bullets,n_brand,count_desc,count_bullet))
 }
@@ -93,32 +94,32 @@ train$countmatch_bullet <- train_words[,7]
 
 train <- arrange(train, id)
 
-    plot(train$nmatch_brand, train$relevance)
-    
-    
-    max(train$countmatch_desc)
-    max(train$nmatch_desc)
-    
-    plot(train$countmatch_desc, train$relevance)
-    plot(train$countmatch_bullet, train$relevance)
-    hist(train$countmatch_desc)
+plot(train$nmatch_brand, train$relevance)
 
-    hist(train$relevance)
+
+max(train$countmatch_desc)
+max(train$nmatch_desc)
+
+plot(train$countmatch_desc, train$relevance)
+plot(train$countmatch_bullet, train$relevance)
+hist(train$countmatch_desc)
+
+hist(train$relevance)
 
 
 #look at the super high relevancy records with low match results:
-    #first set up the differences
-    #THIS led me to want to do a fuzzy match
-    trainpercents <- mutate(train, "perc_title"=(nmatch_title / nwords) * 100,
-                             "perc_desc"=(nmatch_desc / nwords) * 100,
-                             "perc_bullet"=(nmatch_bullets / nwords) * 100,
-                             "perc_brand"=(nmatch_brand / nwords) * 100)
-    train.highrel <- filter(train.percents, relevance == 3, perc_title == 0, perc_desc == 0,
-                            perc_bullet == 0, perc_brand == 0)
-    
-    summary(train$countmatch_desc)
-    summary(train$countmatch_bullet)
-    
+#first set up the differences
+#THIS led me to want to do a fuzzy match
+trainpercents <- mutate(train, "perc_title"=(nmatch_title / nwords) * 100,
+                        "perc_desc"=(nmatch_desc / nwords) * 100,
+                        "perc_bullet"=(nmatch_bullets / nwords) * 100,
+                        "perc_brand"=(nmatch_brand / nwords) * 100)
+train.highrel <- filter(train.percents, relevance == 3, perc_title == 0, perc_desc == 0,
+                        perc_bullet == 0, perc_brand == 0)
+
+summary(train$countmatch_desc)
+summary(train$countmatch_bullet)
+
 #are all description and bullet values the same?
 #train.question <- mutate(train, "bulletdescdiff"=nmatch_desc - nmatch_bullets)
 #train.question <- filter(train.question, bulletdescdiff > 0 | bulletdescdiff < 0)

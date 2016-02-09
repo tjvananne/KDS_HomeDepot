@@ -1,15 +1,16 @@
 
 
 # testing agrep
-setwd("C:/Users/tjvan/Documents/Kaggle/HomeDepot_early_2016/testingconcepts/agrep")
+setwd("C:/Users/tjvan/Documents/Kaggle/HomeDepot_early_2016/homedepotgit")
 
-dataresult <- read.csv("agreptest.csv", stringsAsFactors = FALSE)
-
+data <- read.csv("agreptest.csv", stringsAsFactors = FALSE)
+dataresult <- data
 
 data[1,1]
 data[1,2]
 
 agrepl("aaaa", "bcbb")
+grepl("aaa", "aaab", perl=TRUE, ignore.case=TRUE)
 
 agrep(data[1,1], data[1,2], ignore.case=TRUE, max.distance = 0.3)
     
@@ -22,6 +23,15 @@ agrep(data[1,1], data[1,2], ignore.case=TRUE, max.distance = 0.3)
             dist01 <- c(dist01, 0)
         }
     }; dataresult <- cbind(dataresult, dist01)
+    
+    dist0125 <- integer()
+    for(i in 1:nrow(data)) {
+        if(agrepl(data[i,1], data[i,2], ignore.case=TRUE, max.distance = 0.125)) {
+            dist015 <- c(dist015, 1)   
+        } else {
+            dist015 <- c(dist015, 0)
+        }
+    }; dataresult <- cbind(dataresult, dist0125)
     
     dist015 <- integer()
     for(i in 1:nrow(data)) {

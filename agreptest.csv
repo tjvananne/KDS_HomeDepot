@@ -1,13 +1,13 @@
 searchword,matchedto,avglen,worddif,misspell,hasspace
-its,it,2.5,1,0,0
-up,ups,2.5,1,0,0
-cats,cat,3.5,1,0,0
-books,book,4.5,1,0,0
-test,tests,4.5,1,0,0
-sinnk,sink,4.5,1,1,0
-conches,conch,6,2,0,0
-feline,felines,6.5,1,0,0
-felines,feline,6.5,1,0,0
+its,it is up to you,2.5,1,0,0
+up,ups this is it,2.5,1,0,0
+cats,the cat is here,3.5,1,0,0
+books,I like that book,4.5,1,0,0
+test,this is tests ok,4.5,1,0,0
+sinnk,but the sink was really cool,4.5,1,1,0
+conches,and there were conch,6,2,0,0
+feline,with all these felines there are some,6.5,1,0,0
+felines,and then the feline had a bunch of hairballs,6.5,1,0,0
 toilets,toilet,6.5,1,0,0
 blowers,blower,6.5,1,0,0
 genecrac,generac,7.5,1,1,0
