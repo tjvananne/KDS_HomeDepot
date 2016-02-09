@@ -1,6 +1,8 @@
 
 setwd("C:/Users/tjvan/Documents/Kaggle/HomeDepot_early_2016/homedepotgit")
 
+
+library(usdm)
 library(readr)
 library(dplyr)
 cat("Reading data\n")

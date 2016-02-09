@@ -48,7 +48,10 @@ word_match <- function(words,title,desc,bullets,brand){
     n_brand <- 0
     count_desc <- 0
     count_bullet <- 0
-    print(words)
+    an_title <- 0
+    an_desc <- 0
+    words <- gsub("[ ]{2,}", " ", words)    #this replaces 2 or more spaces with a single space
+    #print(words)
     words <- unlist(strsplit(words," "))
     nwords <- length(words)
     for(i in 1:length(words)){
@@ -57,8 +60,10 @@ word_match <- function(words,title,desc,bullets,brand){
         n_desc <- n_desc + grepl(pattern,desc,perl=TRUE,ignore.case=TRUE)
         n_bullets <- n_bullets + grepl(pattern,bullets,perl=TRUE,ignore.case=TRUE)
         n_brand <- n_brand + grepl(pattern,brand,perl=TRUE,ignore.case=TRUE)
+        an_title <- an_title + agrepl(words[i],title,ignore.case=TRUE,max.distance = 0.13)   #change
+        an_desc <- an_desc + agrepl(words[i],desc,ignore.case=TRUE,max.distance = 0.13)      #change
         
-        #frequency of word appearing in description
+        #frequency of exact word appearing in description
         print(pattern)
         foundInDesc <- gregexpr(pattern, desc, perl=TRUE, ignore.case=TRUE)[[1]][[1]]
         print("printing found in desc")
@@ -69,7 +74,7 @@ word_match <- function(words,title,desc,bullets,brand){
             count_desc <- count_desc + length(gregexpr(pattern, desc, perl=TRUE, ignore.case = TRUE)[[1]])
         }
         
-        #frequency of word appearing in bullets below description
+        #frequency of exact word appearing in bullets below description
         foundInBullets <- gregexpr(pattern, bullets, perl=TRUE, ignore.case=TRUE)[[1]][[1]]
         if(foundInBullets < 0 | is.na(foundInBullets)) {
             count_bullet <- count_bullet + 0 #this is just a placeholder for the else condition
@@ -77,9 +82,12 @@ word_match <- function(words,title,desc,bullets,brand){
             count_bullet <- count_bullet + length(gregexpr(pattern, bullets, perl=TRUE, ignore.case = TRUE)[[1]])
         }
     }
-    return(c(n_title,nwords,n_desc,n_bullets,n_brand,count_desc,count_bullet))
+    return(c(n_title,nwords,n_desc,n_bullets,n_brand,an_title,an_desc,count_desc,count_bullet))
 }
 
+#put back in order (just in case)
+train <- arrange(train, id)
+test <- arrange(test, id)
 
 
 cat("Get number of words and word matching title in train\n")
@@ -89,8 +97,11 @@ train$nwords <- train_words[,2]
 train$nmatch_desc <- train_words[,3]
 train$nmatch_bullets <- train_words[,4]
 train$nmatch_brand <- train_words[,5]
-train$countmatch_desc <- train_words[,6]
-train$countmatch_bullet <- train_words[,7]
+#add fuzzy's here
+train$fuzzy_match_title <- train_words[,6]
+train$fuzzy_match_desc <- train_words[,7]
+train$countmatch_desc <- train_words[,8]
+train$countmatch_bullet <- train_words[,9]
 
 train <- arrange(train, id)
 
@@ -133,8 +144,10 @@ test$nwords <- test_words[,2]
 test$nmatch_desc <- test_words[,3]
 test$nmatch_bullets <- test_words[,4]
 test$nmatch_brand <- test_words[,5]
-test$countmatch_desc <- test_words[,6]
-test$countmatch_bullet <- test_words[,7]
+test$fuzzy_match_title <- test_words[,6]
+test$fuzzy_match_desc <- test_words[,7]
+test$countmatch_desc <- test_words[,8]
+test$countmatch_bullet <- test_words[,9]
 
 test <- arrange(test, id)
 
